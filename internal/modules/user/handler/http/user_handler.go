@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/user/usecase"
-	"github.com/advengulo/go-clean-arch-test/pkg/utils"
+	utils2 "github.com/advengulo/go-clean-arch-test/internal/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -60,7 +60,7 @@ func (h *UserHandler) Create(c echo.Context) error {
 
 	if err := h.Validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
-		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors), http.StatusBadRequest))
+		return c.JSON(http.StatusBadRequest, utils2.Response("Error Validation", nil, utils2.ErrorValidation(errors), http.StatusBadRequest))
 	}
 
 	resp := h.UCUser.Create(payload)

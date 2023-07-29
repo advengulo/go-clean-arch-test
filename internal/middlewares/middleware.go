@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/advengulo/go-clean-arch-test/pkg/utils"
+	"github.com/advengulo/go-clean-arch-test/internal/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
