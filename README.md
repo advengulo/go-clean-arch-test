@@ -15,6 +15,11 @@ This is a Golang API service built using the Go-Clean-Architecture design patter
 - ✅ Authentication: The API is secured with authentication mechanisms.
 - ✅ Middleware: Custom middleware is implemented to handle specific API requests.
 
+#### To be Developed
+- Unit Testing
+- Make
+- Docker
+
 ## Getting Started
 
 ### Prerequisites
