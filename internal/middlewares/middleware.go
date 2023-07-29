@@ -8,8 +8,13 @@ import (
 )
 
 func Register(e *echo.Echo) {
+	logConfig := middleware.LoggerConfig{
+		Format:           "${time_custom} | ${protocol} | ${method} | ${host} | ${uri} | ${status} | ${latency_human}\n",
+		CustomTimeFormat: "2006-01-02 15:04:05.000",
+	}
+
 	middlewareChain := []echo.MiddlewareFunc{
-		middleware.Logger(),
+		middleware.LoggerWithConfig(logConfig),
 		JWTAuthorization,
 		middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: []string{"*"},
