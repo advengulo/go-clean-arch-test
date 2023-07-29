@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/advengulo/go-clean-arch-test/internal/models"
+	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 	"os"
@@ -20,7 +20,7 @@ type Claim struct {
 	jwt.RegisteredClaims
 }
 
-func CreateToken(payload models.UserPayload) (models.Token, error) {
+func CreateToken(payload domains.UserPayload) (domains.Token, error) {
 	expirationTime := time.Now().Add(12 * time.Hour)
 
 	claim := &Claim{
@@ -33,10 +33,10 @@ func CreateToken(payload models.UserPayload) (models.Token, error) {
 
 	token, err := claim.GetToken()
 	if err != nil {
-		return models.Token{}, err
+		return domains.Token{}, err
 	}
 
-	return models.Token{
+	return domains.Token{
 		Token:     token,
 		ExpiredAt: expirationTime,
 	}, nil

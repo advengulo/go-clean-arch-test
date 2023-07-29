@@ -1,4 +1,4 @@
-package models
+package domains
 
 type UserPayload struct {
 	Username string `json:"username" validate:"required"`

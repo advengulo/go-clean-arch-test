@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/advengulo/go-clean-arch-test/internal/models"
+	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/user/usecase"
 	"github.com/advengulo/go-clean-arch-test/pkg/utils"
 	"github.com/go-playground/validator/v10"
@@ -52,7 +52,7 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 }
 
 func (h *UserHandler) Create(c echo.Context) error {
-	var payload *models.User
+	var payload *domains.User
 
 	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

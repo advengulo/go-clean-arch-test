@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/advengulo/go-clean-arch-test/internal/models"
+	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/user/repository"
 	"github.com/advengulo/go-clean-arch-test/pkg/utils"
 	"net/http"
@@ -9,11 +9,11 @@ import (
 
 // UserUseCase is the interface for the user service
 type UserUseCase interface {
-	GetAllUser() models.Response
-	GetUser(id uint) models.Response
-	Create(pl *models.User) models.Response
-	Delete(id uint) models.Response
-	GetByUsername(username string) models.Response
+	GetAllUser() domains.Response
+	GetUser(id uint) domains.Response
+	Create(pl *domains.User) domains.Response
+	Delete(id uint) domains.Response
+	GetByUsername(username string) domains.Response
 }
 
 // UserUseCaseImpl implements the UserUseCase interface
@@ -26,7 +26,7 @@ func NewUserUseCase(repository repository.UserRepository) UserUseCase {
 	return &UserUseCaseImpl{UserRepository: repository}
 }
 
-func (s *UserUseCaseImpl) GetAllUser() models.Response {
+func (s *UserUseCaseImpl) GetAllUser() domains.Response {
 	data, err := s.UserRepository.GetAllUser()
 	if err != nil {
 		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
@@ -36,7 +36,7 @@ func (s *UserUseCaseImpl) GetAllUser() models.Response {
 }
 
 // GetUser returns a user with the given ID
-func (s *UserUseCaseImpl) GetUser(id uint) models.Response {
+func (s *UserUseCaseImpl) GetUser(id uint) domains.Response {
 	data, err := s.UserRepository.GetByID(id)
 	if err != nil {
 		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)
@@ -45,7 +45,7 @@ func (s *UserUseCaseImpl) GetUser(id uint) models.Response {
 	return utils.Response("OK", data, nil, http.StatusOK)
 }
 
-func (s *UserUseCaseImpl) Create(pl *models.User) models.Response {
+func (s *UserUseCaseImpl) Create(pl *domains.User) domains.Response {
 	hashPassword, err := utils.HashPassword(pl.Password)
 	pl.Password = hashPassword
 
@@ -57,7 +57,7 @@ func (s *UserUseCaseImpl) Create(pl *models.User) models.Response {
 	return utils.Response("OK", pl, nil, http.StatusOK)
 }
 
-func (s *UserUseCaseImpl) Delete(id uint) models.Response {
+func (s *UserUseCaseImpl) Delete(id uint) domains.Response {
 	user, err := s.UserRepository.GetByID(id)
 	if err != nil {
 		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)
@@ -73,7 +73,7 @@ func (s *UserUseCaseImpl) Delete(id uint) models.Response {
 }
 
 // GetByUsername returns a user with the given username
-func (s *UserUseCaseImpl) GetByUsername(username string) models.Response {
+func (s *UserUseCaseImpl) GetByUsername(username string) domains.Response {
 	data, err := s.UserRepository.GetByUsername(username)
 	if err != nil {
 		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)

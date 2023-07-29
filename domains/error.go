@@ -1,4 +1,4 @@
-package models
+package domains
 
 type ErrorValidation struct {
 	Field   string `json:"field"`

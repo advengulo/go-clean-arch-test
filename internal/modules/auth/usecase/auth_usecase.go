@@ -1,15 +1,15 @@
 package usecase
 
 import (
-	"github.com/advengulo/go-clean-arch-test/internal/models"
+	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/user/usecase"
 	"github.com/advengulo/go-clean-arch-test/pkg/utils"
 	"net/http"
 )
 
 type AuthUseCase interface {
-	Login(pl *models.UserPayload) models.Response
-	Validate(token string) models.Response
+	Login(pl *domains.UserPayload) domains.Response
+	Validate(token string) domains.Response
 }
 
 type auth struct {
@@ -20,13 +20,13 @@ func NewAuthUseCase(ucUser usecase.UserUseCase) AuthUseCase {
 	return &auth{ucUser: ucUser}
 }
 
-func (a *auth) Login(pl *models.UserPayload) models.Response {
+func (a *auth) Login(pl *domains.UserPayload) domains.Response {
 	user := a.ucUser.GetByUsername(pl.Username)
 	if user.Error != nil {
 		return utils.Response("Error", nil, "Username or password invalid", http.StatusUnauthorized)
 	}
 
-	userData := user.Data.(*models.User)
+	userData := user.Data.(*domains.User)
 
 	if !utils.CheckPasswordHash(pl.Password, userData.Password) {
 		return utils.Response("Error", nil, "Username or password invalid", http.StatusUnauthorized)
@@ -41,7 +41,7 @@ func (a *auth) Login(pl *models.UserPayload) models.Response {
 	return utils.Response("OK", token, nil, http.StatusOK)
 }
 
-func (a *auth) Validate(token string) models.Response {
+func (a *auth) Validate(token string) domains.Response {
 	dataToken, err := utils.GetDataToken(token)
 	if err != nil {
 		return utils.Response("Error", nil, err, http.StatusUnauthorized)

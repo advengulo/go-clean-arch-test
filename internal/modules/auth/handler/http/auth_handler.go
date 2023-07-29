@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/advengulo/go-clean-arch-test/internal/models"
+	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/auth/usecase"
 	"github.com/advengulo/go-clean-arch-test/pkg/utils"
 	"github.com/go-playground/validator/v10"
@@ -25,7 +25,7 @@ func NewAuthHandler(e *echo.Echo, v *validator.Validate, ucAuth usecase.AuthUseC
 }
 
 func (a *AuthHandler) Login(c echo.Context) error {
-	var payload *models.UserPayload
+	var payload *domains.UserPayload
 
 	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
