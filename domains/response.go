@@ -3,10 +3,10 @@ package domains
 import "strconv"
 
 type Response struct {
-	Code   string      `json:"code"`
 	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
 	Error  interface{} `json:"error"`
+	Code   string      `json:"code"`
 }
 
 func (r *Response) HttpCode() int {

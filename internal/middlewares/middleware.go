@@ -9,8 +9,9 @@ import (
 
 func Register(e *echo.Echo) {
 	logConfig := middleware.LoggerConfig{
-		Format:           "${time_custom} | ${protocol} | ${method} | ${host} | ${uri} | ${status} | ${latency_human}\n",
+		Format:           "${time_custom} | ${status} | ${method} | ${host} | ${uri} | ${user_agent} | ${latency_human}\n",
 		CustomTimeFormat: "2006-01-02 15:04:05.000",
+		Output:           e.Logger.Output(),
 	}
 
 	middlewareChain := []echo.MiddlewareFunc{
@@ -21,6 +22,7 @@ func Register(e *echo.Echo) {
 		}),
 	}
 
+	e.HTTPErrorHandler = utils.ErrorHandler
 	e.Use(middlewareChain...)
 }
 

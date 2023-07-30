@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
+	"net/http"
 	"reflect"
 )
 
@@ -20,7 +22,7 @@ func ErrorValidation(err validator.ValidationErrors, data interface{}) (errVal [
 		if jsonTag == "" {
 			jsonTag = e.Field()
 		}
-		
+
 		errVal = append(errVal, domains.ErrorValidation{
 			Parameter: jsonTag,
 			Message:   fmt.Sprintf("Parameter %s %s", jsonTag, validationTagMessage(e.Tag())),
@@ -28,4 +30,19 @@ func ErrorValidation(err validator.ValidationErrors, data interface{}) (errVal [
 	}
 
 	return
+}
+
+// ErrorHandler is custom implementation of the error handler.
+func ErrorHandler(err error, c echo.Context) {
+	code := http.StatusInternalServerError
+	message := "Internal Server Error"
+
+	switch e := err.(type) {
+	case *echo.HTTPError:
+		code = e.Code
+		message = e.Message.(string)
+	}
+
+	// Send the error response.
+	c.JSON(code, Response(nil, message, code))
 }
