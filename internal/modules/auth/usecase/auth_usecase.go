@@ -23,29 +23,29 @@ func NewAuthUseCase(ucUser usecase.UserUseCase) AuthUseCase {
 func (a *auth) Login(pl *domains.UserPayload) domains.Response {
 	user := a.userUC.GetByUsername(pl.Username)
 	if user.Error != nil {
-		return utils.Response("Error", nil, "Username or password invalid", http.StatusUnauthorized)
+		return utils.Response(nil, "Username or password invalid", http.StatusUnauthorized)
 	}
 
 	userData := user.Data.(*domains.User)
 
 	if !utils.CheckPasswordHash(pl.Password, userData.Password) {
-		return utils.Response("Error", nil, "Username or password invalid", http.StatusUnauthorized)
+		return utils.Response(nil, "Username or password invalid", http.StatusUnauthorized)
 	}
 
 	token, err := utils.CreateToken(*pl)
 	if err != nil {
-		return utils.Response("Error", nil, "Something went wrong", http.StatusInternalServerError)
+		return utils.Response(nil, "Something went wrong", http.StatusInternalServerError)
 
 	}
 
-	return utils.Response("OK", token, nil, http.StatusOK)
+	return utils.Response(token, nil, http.StatusOK)
 }
 
 func (a *auth) Validate(token string) domains.Response {
 	dataToken, err := utils.GetDataToken(token)
 	if err != nil {
-		return utils.Response("Error", nil, err, http.StatusUnauthorized)
+		return utils.Response(nil, err, http.StatusUnauthorized)
 	}
 
-	return utils.Response("OK", dataToken, nil, http.StatusOK)
+	return utils.Response(dataToken, nil, http.StatusOK)
 }

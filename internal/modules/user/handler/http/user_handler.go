@@ -61,7 +61,7 @@ func (h *UserHandler) Create(c echo.Context) error {
 
 	if err := h.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
-		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
+		return c.JSON(http.StatusBadRequest, utils.Response(nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
 	}
 
 	resp := h.userUC.Create(&payload)
@@ -78,7 +78,7 @@ func (h *UserHandler) Update(c echo.Context) error {
 
 	if err := h.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
-		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
+		return c.JSON(http.StatusBadRequest, utils.Response(nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
 	}
 
 	resp := h.userUC.Update(&payload)
