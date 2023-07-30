@@ -52,7 +52,7 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 }
 
 func (h *UserHandler) Create(c echo.Context) error {
-	var payload *domains.User
+	var payload domains.User
 
 	if err := c.Bind(&payload); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -60,10 +60,10 @@ func (h *UserHandler) Create(c echo.Context) error {
 
 	if err := h.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
-		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors), http.StatusBadRequest))
+		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
 	}
 
-	resp := h.userUC.Create(payload)
+	resp := h.userUC.Create(&payload)
 
 	return c.JSON(resp.HttpCode(), resp)
 }

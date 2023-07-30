@@ -33,7 +33,7 @@ func (a *AuthHandler) Login(c echo.Context) error {
 
 	if err := a.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
-		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors), http.StatusBadRequest))
+		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
 	}
 
 	resp := a.authUC.Login(payload)
