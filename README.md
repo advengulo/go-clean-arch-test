@@ -15,10 +15,15 @@ This is a Golang API service built using the Go-Clean-Architecture design patter
 - ✅ Authentication: The API is secured with authentication mechanisms.
 - ✅ Middleware: Custom middleware is implemented to handle specific API requests.
 
-#### To be Developed
+#### To be Implement
 - Unit Testing
 - Make
 - Docker
+- Swagger
+- Api versioning
+- Caching
+- Rate-limiting
+- Logging
 
 ## Getting Started
 
@@ -46,19 +51,19 @@ go mod download
 ## Project Structure
 ```markdown
 - cmd/
-    - main.go               # Application entry point
+    - main.go                   # Application entry point
+- domains/                      # Data domain
 - internal/
-    - middlewares/          # Custom middleware
-    - models/               # Data models
+    - middlewares/              # Custom middleware
     - modules/
         - app/
-            - handler.go     # API handlers
-            - repository.go  # Database repository interfaces
-            - usecase.go     # Business logic use cases
+            - handler/          # API handlers
+            - repository/       # Database repository interfaces
+            - usecase/          # Business logic use cases
+    - utils/                    # Utility functions
 - pkg/
     - database/
-        - migrations/       # Database migrations
-    - utils/                # Utility functions
+        - migrations/           # Database migrations
 ```
 
 ## Config
