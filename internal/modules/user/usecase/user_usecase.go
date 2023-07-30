@@ -3,7 +3,7 @@ package usecase
 import (
 	"github.com/advengulo/go-clean-arch-test/domains"
 	"github.com/advengulo/go-clean-arch-test/internal/modules/user/repository"
-	utils2 "github.com/advengulo/go-clean-arch-test/internal/utils"
+	"github.com/advengulo/go-clean-arch-test/internal/utils"
 	"net/http"
 )
 
@@ -29,46 +29,46 @@ func NewUserUseCase(repository repository.UserRepository) UserUseCase {
 func (s *UserUseCaseImpl) GetAllUser() domains.Response {
 	data, err := s.UserRepository.GetAllUser()
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
 	}
 
-	return utils2.Response("OK", data, nil, http.StatusOK)
+	return utils.Response("OK", data, nil, http.StatusOK)
 }
 
 // GetUser returns a user with the given ID
 func (s *UserUseCaseImpl) GetUser(id uint) domains.Response {
 	data, err := s.UserRepository.GetByID(id)
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusNotFound)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)
 	}
 
-	return utils2.Response("OK", data, nil, http.StatusOK)
+	return utils.Response("OK", data, nil, http.StatusOK)
 }
 
 func (s *UserUseCaseImpl) Create(pl *domains.User) domains.Response {
-	hashPassword, err := utils2.HashPassword(pl.Password)
+	hashPassword, err := utils.HashPassword(pl.Password)
 	pl.Password = hashPassword
 
 	err = s.UserRepository.Create(pl)
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
 	}
 
-	return utils2.Response("OK", pl, nil, http.StatusOK)
+	return utils.Response("OK", pl, nil, http.StatusOK)
 }
 
 func (s *UserUseCaseImpl) Delete(id uint) domains.Response {
 	user, err := s.UserRepository.GetByID(id)
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusNotFound)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)
 	}
 
 	err = s.UserRepository.Delete(user)
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
 	}
 
-	return utils2.Response("OK", user, nil, http.StatusOK)
+	return utils.Response("OK", user, nil, http.StatusOK)
 
 }
 
@@ -76,8 +76,8 @@ func (s *UserUseCaseImpl) Delete(id uint) domains.Response {
 func (s *UserUseCaseImpl) GetByUsername(username string) domains.Response {
 	data, err := s.UserRepository.GetByUsername(username)
 	if err != nil {
-		return utils2.Response("ERROR", nil, err.Error(), http.StatusNotFound)
+		return utils.Response("ERROR", nil, err.Error(), http.StatusNotFound)
 	}
 
-	return utils2.Response("OK", data, nil, http.StatusOK)
+	return utils.Response("OK", data, nil, http.StatusOK)
 }
