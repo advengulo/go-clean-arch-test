@@ -26,6 +26,7 @@ func NewUserHandler(e *echo.Echo, v *validator.Validate, ucUser usecase.UserUseC
 	e.GET("/users", h.GetAllUser)
 	e.GET("/users/:id", h.GetUser)
 	e.POST("/users", h.Create)
+	e.PUT("/users", h.Update)
 	e.DELETE("users/:id", h.Delete)
 }
 
@@ -64,6 +65,23 @@ func (h *UserHandler) Create(c echo.Context) error {
 	}
 
 	resp := h.userUC.Create(&payload)
+
+	return c.JSON(resp.HttpCode(), resp)
+}
+
+func (h *UserHandler) Update(c echo.Context) error {
+	var payload domains.ValidateUserUpdate
+
+	if err := c.Bind(&payload); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if err := h.validator.Struct(payload); err != nil {
+		errors := err.(validator.ValidationErrors)
+		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors, payload), http.StatusBadRequest))
+	}
+
+	resp := h.userUC.Update(&payload)
 
 	return c.JSON(resp.HttpCode(), resp)
 }

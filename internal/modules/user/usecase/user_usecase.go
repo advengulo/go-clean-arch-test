@@ -12,6 +12,7 @@ type UserUseCase interface {
 	GetAllUser() domains.Response
 	GetUser(id uint) domains.Response
 	Create(pl *domains.User) domains.Response
+	Update(pl *domains.ValidateUserUpdate) domains.Response
 	Delete(id uint) domains.Response
 	GetByUsername(username string) domains.Response
 }
@@ -53,6 +54,40 @@ func (s *UserUseCaseImpl) Create(pl *domains.User) domains.Response {
 	if err != nil {
 		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
 	}
+
+	return utils.Response("OK", pl, nil, http.StatusOK)
+}
+
+func (s *UserUseCaseImpl) Update(pl *domains.ValidateUserUpdate) domains.Response {
+	users, err := s.userRepository.GetByID(pl.ID)
+	if err != nil {
+		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
+	}
+
+	// Check if exist password is same
+	isMatchOldPassword := utils.CheckPasswordHash(pl.OldPassword, users.Password)
+	if !isMatchOldPassword {
+		return utils.Response("ERROR", nil, "Invalid old password", http.StatusBadRequest)
+	}
+
+	hashPassword, err := utils.HashPassword(pl.NewPassword)
+	if !isMatchOldPassword {
+		return utils.Response("ERROR", nil, err.Error(), http.StatusBadRequest)
+	}
+
+	usersUpdateData := domains.User{
+		ID:       pl.ID,
+		Username: pl.Username,
+		Password: hashPassword,
+	}
+
+	err = s.userRepository.Update(&usersUpdateData)
+	if err != nil {
+		return utils.Response("ERROR", nil, err.Error(), http.StatusInternalServerError)
+	}
+
+	pl.NewPassword = hashPassword
+	pl.OldPassword, _ = utils.HashPassword(pl.OldPassword)
 
 	return utils.Response("OK", pl, nil, http.StatusOK)
 }
