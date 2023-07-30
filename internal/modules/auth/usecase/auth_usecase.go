@@ -13,15 +13,15 @@ type AuthUseCase interface {
 }
 
 type auth struct {
-	ucUser usecase.UserUseCase
+	userUC usecase.UserUseCase
 }
 
 func NewAuthUseCase(ucUser usecase.UserUseCase) AuthUseCase {
-	return &auth{ucUser: ucUser}
+	return &auth{userUC: ucUser}
 }
 
 func (a *auth) Login(pl *domains.UserPayload) domains.Response {
-	user := a.ucUser.GetByUsername(pl.Username)
+	user := a.userUC.GetByUsername(pl.Username)
 	if user.Error != nil {
 		return utils.Response("Error", nil, "Username or password invalid", http.StatusUnauthorized)
 	}

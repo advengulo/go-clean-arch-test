@@ -10,14 +10,14 @@ import (
 )
 
 type AuthHandler struct {
-	ucAuth    usecase.AuthUseCase
-	Validator *validator.Validate
+	authUC    usecase.AuthUseCase
+	validator *validator.Validate
 }
 
 func NewAuthHandler(e *echo.Echo, v *validator.Validate, ucAuth usecase.AuthUseCase) {
 	h := &AuthHandler{
-		ucAuth:    ucAuth,
-		Validator: v,
+		authUC:    ucAuth,
+		validator: v,
 	}
 
 	e.POST("/auth/login", h.Login)
@@ -31,12 +31,12 @@ func (a *AuthHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err := a.Validator.Struct(payload); err != nil {
+	if err := a.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
 		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors), http.StatusBadRequest))
 	}
 
-	resp := a.ucAuth.Login(payload)
+	resp := a.authUC.Login(payload)
 
 	return c.JSON(resp.HttpCode(), resp)
 }
@@ -44,7 +44,7 @@ func (a *AuthHandler) Login(c echo.Context) error {
 func (a *AuthHandler) Validate(c echo.Context) error {
 	token := utils.GetHeaderToken(c)
 
-	resp := a.ucAuth.Validate(token)
+	resp := a.authUC.Validate(token)
 
 	return c.JSON(resp.HttpCode(), resp)
 }

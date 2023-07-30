@@ -12,15 +12,15 @@ import (
 
 // UserHandler handles HTTP requests related to users
 type UserHandler struct {
-	UCUser    usecase.UserUseCase
-	Validator *validator.Validate
+	userUC    usecase.UserUseCase
+	validator *validator.Validate
 }
 
 // NewUserHandler creates a new UserHandler instance
 func NewUserHandler(e *echo.Echo, v *validator.Validate, ucUser usecase.UserUseCase) {
 	h := &UserHandler{
-		UCUser:    ucUser,
-		Validator: v,
+		userUC:    ucUser,
+		validator: v,
 	}
 
 	e.GET("/users", h.GetAllUser)
@@ -31,7 +31,7 @@ func NewUserHandler(e *echo.Echo, v *validator.Validate, ucUser usecase.UserUseC
 
 // GetAllUser returns all users
 func (h *UserHandler) GetAllUser(c echo.Context) error {
-	resp := h.UCUser.GetAllUser()
+	resp := h.userUC.GetAllUser()
 
 	return c.JSON(resp.HttpCode(), resp)
 }
@@ -46,7 +46,7 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 	}
 
 	// Call the user service to get the user
-	resp := h.UCUser.GetUser(uint(id))
+	resp := h.userUC.GetUser(uint(id))
 
 	return c.JSON(resp.HttpCode(), resp)
 }
@@ -58,12 +58,12 @@ func (h *UserHandler) Create(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err := h.Validator.Struct(payload); err != nil {
+	if err := h.validator.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
 		return c.JSON(http.StatusBadRequest, utils.Response("Error Validation", nil, utils.ErrorValidation(errors), http.StatusBadRequest))
 	}
 
-	resp := h.UCUser.Create(payload)
+	resp := h.userUC.Create(payload)
 
 	return c.JSON(resp.HttpCode(), resp)
 }
@@ -76,7 +76,7 @@ func (h *UserHandler) Delete(c echo.Context) error {
 	}
 
 	// Call the user service to get the user
-	resp := h.UCUser.Delete(uint(id))
+	resp := h.userUC.Delete(uint(id))
 
 	return c.JSON(resp.HttpCode(), resp)
 }
