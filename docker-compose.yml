@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  go-srv-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-srv-test
+    ports:
+      - "8081:8081"
+    depends_on:
+      - psql-srv-test
+    env_file:
+      - ./.env
+    volumes:
+      - ./pkg/database/migrations:/pkg/database/migrations
+
+  psql-srv-test:
+    image: postgres:latest
+    container_name: psql-srv-test
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_PASSWORD: goSrvTestDB123  # Set the password here
+    ports:
+      - "5423:5432"  # Change the port to 5423
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data

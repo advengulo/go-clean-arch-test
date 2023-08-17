@@ -13,6 +13,7 @@ import (
 	"github.com/subosito/gotenv"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 )
 
 var (
@@ -44,6 +45,11 @@ func main() {
 	validate := validator.New()
 
 	e := echo.New()
+
+	// Register the ping endpoint
+	e.GET("/ping", func(c echo.Context) error {
+		return c.String(http.StatusOK, "pong")
+	})
 
 	// Execute Middleware
 	middlewares.Register(e)
